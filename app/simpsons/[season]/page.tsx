@@ -2,9 +2,8 @@ import db from '@/db';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default async function({ params }: { params: Promise<{ season: string }> }) {
+export default async function Page({ params }: { params: Promise<{ season: string }> }) {
   const { season } = await params;
-  console.log(season);
   const seasonData = db.find(({ number }) => number === season);
 
   return (

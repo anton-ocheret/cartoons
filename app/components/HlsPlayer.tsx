@@ -31,8 +31,12 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
         hls.loadSource(src);
         hls.attachMedia(video);
       }
-
-      return () => hls?.destroy();
+      return () => {
+        if (hls) {
+          hls.destroy();
+          hls = null;
+        }
+      };
     }, [manifest]);
 
     return (
