@@ -1,8 +1,7 @@
 import db from '@/db';
 import Link from 'next/link';
-import Image from 'next/image';
 import HlsPlayer from '@/app/components/HlsPlayer';
-export default async function({ params }: { params: { season: string, episode: string } }) {
+export default async function({ params }: { params: Promise<{ season: string, episode: string }> }) {
   const { season, episode } = await params;
 
   const seasonData = db.find(({ number }) => number === season);
