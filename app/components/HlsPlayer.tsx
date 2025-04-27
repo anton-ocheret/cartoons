@@ -1,57 +1,59 @@
-"use client";
+'use client';
 import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
-} from "react";
-import Hls from "hls.js/dist/hls.light"; // Use light build of hls.
+} from 'react';
+import Hls from 'hls.js/dist/hls.light';
 
 interface Props extends React.HTMLProps<HTMLVideoElement> {
-  manifest: string;
+  videoUrl: string;
 }
 
 const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
-  ({ manifest, ...props }, ref) => {
+  ({ videoUrl, ...props }, ref) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useImperativeHandle(ref, () => videoRef.current!); // Expose internal ref to forwardedRef. (Allows for callback & regular useRef)
 
     useEffect(() => {
-      const src = manifest;
-      const { current: video } = videoRef;
-      if (!video) return;
+      if (!videoRef.current) return;
 
       let hls: Hls | null;
-      if (video.canPlayType("application/vnd.apple.mpegurl")) { // Safari
-        video.src = src;
+      if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) { // Safari
+        videoRef.current.src = videoUrl;
       } else if (Hls.isSupported()) {
-        console.log("Hls is supported");
         const hls = new Hls();
-        hls.loadSource(src);
-        hls.attachMedia(video);
+
+        hls.loadSource(videoUrl);
+        hls.attachMedia(videoRef.current);
       }
+
       return () => {
         if (hls) {
           hls.destroy();
           hls = null;
         }
       };
-    }, [manifest]);
+    }, [videoUrl]);
 
     return (
       <video
-        width="500px"
-        height="500px"
+        className='w-full'
         {...props}
         ref={videoRef}
-        controls={true}
-        data-displaymaxtap="true"
+        controls
+        playsInline
+        preload='auto'
+        loop={false}
       />
     );
   }
 );
 
-HLSPlayer.displayName = "HLSPlayer";
+HLSPlayer.displayName = 'HLSPlayer';
+
+// Hls.Events.MEDIA_ENDED
 
 export default HLSPlayer;
