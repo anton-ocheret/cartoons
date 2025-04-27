@@ -30,7 +30,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Сімпсони без реклами" />
-        <meta name="keywords" content="Сімпсони, без реклами, без реклами, без реклами" />
+        <meta name="keywords" content="Сімпсони, без реклами, онлайн" />
         <meta name="author" content="Сімпсони без реклами" />
         <meta name="robots" content="index, follow" />
         <meta name="google" content="notranslate" />
