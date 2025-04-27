@@ -1,4 +1,5 @@
 'use client';
+
 import React, {
   forwardRef,
   useEffect,
@@ -6,14 +7,19 @@ import React, {
   useRef,
 } from 'react';
 import Hls from 'hls.js/dist/hls.light';
+import { useParams, useRouter } from 'next/navigation';
 
 interface Props extends React.HTMLProps<HTMLVideoElement> {
   videoUrl: string;
+  hasNextEpisode: boolean;
+  hasNextSeason: boolean;
 }
 
 const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
-  ({ videoUrl, ...props }, ref) => {
+  ({ videoUrl, hasNextEpisode, hasNextSeason, ...props }, ref) => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const router = useRouter();
+    const params = useParams();
 
     useImperativeHandle(ref, () => videoRef.current!); // Expose internal ref to forwardedRef. (Allows for callback & regular useRef)
 
@@ -28,6 +34,15 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
 
         hls.loadSource(videoUrl);
         hls.attachMedia(videoRef.current);
+
+        hls.on((Hls.Events as any).MEDIA_ENDED, () => {
+          if (hasNextEpisode) {
+            router.push(`/simpsons/${params.season}/episode/${Number(params.episode) + 1}`);
+            return;
+          } else if (hasNextSeason) {
+            router.push(`/simpsons/${Number(params.season) + 1}/episode/1`);
+          }
+        });
       }
 
       return () => {
@@ -36,7 +51,7 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
           hls = null;
         }
       };
-    }, [videoUrl]);
+    }, [videoUrl, router, params]);
 
     return (
       <video
@@ -53,7 +68,5 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
 );
 
 HLSPlayer.displayName = 'HLSPlayer';
-
-// Hls.Events.MEDIA_ENDED
 
 export default HLSPlayer;

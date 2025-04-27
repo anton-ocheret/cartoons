@@ -86,7 +86,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
         </div>
       </div>
       <div className='flex flex-col items-center justify-center'>  
-        <HlsPlayer videoUrl={episodeData?.video || ''} />
+        <HlsPlayer
+          hasNextEpisode={hasNextEpisode}
+          hasNextSeason={hasNextSeason}
+          videoUrl={episodeData?.video || ''}
+        />
       </div>
     </div>
   )
