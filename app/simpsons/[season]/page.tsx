@@ -3,14 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
-type SeasonData = {
-  number: string;
-  episodes: {
-    number: string;
-    poster: string;
-  }[];
-} | null;
-
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
   const { season } = await params;
   const seasonData = db.find(({ number }) => number === season);
