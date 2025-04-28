@@ -28,32 +28,34 @@ export default async function Page({ params }: { params: Promise<{ season: strin
 
   return (
     <>
-      <div className='flex justify-between mb-5 items-center relative'>
-        <div>
-          {
-            hasPrevSeason && (
-              <Link href={`/simpsons/${prevSeason}`}>
-                <Button>Попередній сезон</Button>
-              </Link>
-            )
-          }
+      
+        <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
+          <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
+            {
+              hasPrevSeason && (
+                <Link href={`/simpsons/${prevSeason}`} className='m-2 first:sm:ml-0'>
+                  <Button>Попередній сезон</Button>
+                </Link>
+              )
+            }
+          </div>
+          <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{season} Сезон</p>
+          <div className='flex w-full justify-center order-3 sm:w-auto'>
+            {
+              hasNextSeason && (
+                <Link href={`/simpsons/${nextSeason}`} className='m-2 first:sm:mr-0'>
+                  <Button>Наступний сезон</Button>
+                </Link>
+              )
+            }
+          </div>
         </div>
-        <p className='absolute left-1/2 -translate-x-1/2'>{season} Сезон</p>
-        <div>
-          {
-            hasNextSeason && (
-              <Link href={`/simpsons/${nextSeason}`}>
-                <Button>Наступний сезон</Button>
-              </Link>
-            )
-          }
-        </div>
-      </div>
+      
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
         {episodes.map(({ poster, number }) => {
           return (
             <Link  href={`/simpsons/${Number(seasonData.number)}/episode/${Number(number)}`} key={number}>
-              <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3'/>
+              <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
               <h6 className='text-lg'>{number} Епізод</h6>
             </Link>
           )

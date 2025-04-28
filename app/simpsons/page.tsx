@@ -8,7 +8,7 @@ export default function Page() {
       {db.map(({ poster, number }) => {
         return (
           <Link  href={`/simpsons/${number}`} key={number}>
-            <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3'/>
+            <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
             <h6 className='text-lg'>{number} Сезон</h6>
           </Link>
         )

@@ -50,36 +50,36 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   
   return (
     <div>
-      <div className='flex justify-between mb-5 items-center relative'>
-        <div>
+      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
+        <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
           {
             hasPrevSeason && (
-              <Link href={`/simpsons/${prevSeason}/episode/1`} className='mr-2'>
+              <Link href={`/simpsons/${prevSeason}/episode/1`} className='m-2 first:sm:ml-0'>
                 <Button>Попередній сезон</Button>
               </Link>
             )
           }
           {
-            hasPrevEpisode && (
-              <Link href={`/simpsons/${seasonData.number}/episode/${prevEpisode}`}>
-                <Button>Попередній eпізод</Button>
+            hasNextSeason && (
+              <Link href={`/simpsons/${nextSeason}/episode/1`} className='m-2 first:sm:ml-0'>
+                <Button>Наступний сезон</Button>
               </Link>
             )
           }
         </div>
-        <p className='absolute left-1/2 -translate-x-1/2'>{season} Сезон | {episode} Епізод</p>
-        <div>
+        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{season} Сезон | {episode} Епізод</p>
+        <div className='flex w-full justify-center order-3 sm:w-auto'>
           {
-            hasNextEpisode && (
-              <Link href={`/simpsons/${seasonData.number}/episode/${nextEpisode}`}>
-                <Button>Наступний епізод</Button>
+            hasPrevEpisode && (
+              <Link href={`/simpsons/${seasonData.number}/episode/${prevEpisode}`} className='m-2 last:sm:mr-0'>
+                <Button>Попередній eпізод</Button>
               </Link>
             )
           }
           {
-            hasNextSeason && (
-              <Link href={`/simpsons/${nextSeason}/episode/1`} className='ml-2'>
-                <Button>Наступний сезон</Button>
+            hasNextEpisode && (
+              <Link href={`/simpsons/${seasonData.number}/episode/${nextEpisode}`} className='m-2 last:sm:mr-0'>
+                <Button>Наступний епізод</Button>
               </Link>
             )
           }
