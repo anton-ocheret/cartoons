@@ -6,16 +6,18 @@ import { togleSeenAction } from '../queries';
 
 export function TogleSeenButton(props: {
   seen: boolean,
-  seasonId: string,
-  episodeNumber: string,
+  seasonId?: string,
+  episodeNumber?: string,
   noLabel?: boolean,
   className?: string,
   disabled?: boolean,
 }) {
-  const { noLabel = false, disabled = false } = props;
+  const {
+    noLabel = false,
+  } = props;
   const Icon = props.seen ? <Eye /> : <EyeOff />;
   const text = props.seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
-
+  const disabled = !props.seasonId || !props.episodeNumber || props.disabled;
   return (
     <>
       <form action={togleSeenAction} className='flex flex-row items-center'>
