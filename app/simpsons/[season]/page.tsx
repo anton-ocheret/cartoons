@@ -33,11 +33,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
 
   return (
     <>
-      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-center sm:items-center mb-3'>
+      <div className='flex flex-wrap flex-row justify-center items-center mb-3'>
         <Link href={`/simpsons/${prevSeason}`} className={clsx({ 'pointer-events-none': !hasPrevSeason })}>
           <Button size="icon" disabled={!hasPrevSeason}><ChevronLeft/></Button>
         </Link>
-        <p className='flex-shrink-0 text-center w-full m-2 sm:w-auto'>{seasonId} Сезон</p>
+        <p className='text-center m-2 sm:w-auto'>{seasonId} Сезон</p>
         <Link href={`/simpsons/${nextSeason}`} className={clsx({ 'pointer-events-none': !hasNextSeason })}>
           <Button size="icon" disabled={!hasNextSeason}><ChevronRight/></Button>
         </Link>

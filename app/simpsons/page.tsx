@@ -15,7 +15,7 @@ export default async function Page() {
             <Link  href={`/simpsons/${season_id}`} key={season_id}>
               <Image src={poster} alt={`Постер Сезону ${season_id}`} width={256} height={269} className='rounded-lg mb-3 w-full'/>
             </Link>
-            <div className={clsx('flex flex-row items-center justify-between', {
+            <div className={clsx('flex flex-col md:flex-row items-center justify-between', {
               'text-green-500': seen_episodes === total_episodes,
             })}>  
               <h6 className='text-lg'>{season_id} Сезон</h6>
