@@ -10,11 +10,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   const { season: seasonId } = await params;
   const episodes = await getEpisodes(Number(seasonId));
 
-  if (!episodes) {
+  if (!episodes.length) {
     return (
       <>
         <div className='flex flex-col items-center justify-center h-screen'>
-          <p className='text-2xl font-bold mb-4'>Сезон не найден</p>
+          <p className='text-2xl font-bold mb-4'>{seasonId} Сезон не знайдено</p>
           <Link href='/simpsons'>
             <Button>На головну</Button>
           </Link>
