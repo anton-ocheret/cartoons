@@ -1,7 +1,11 @@
 import Link from 'next/link';
-import HlsPlayer from '@/app/components/HlsPlayer';
+// import HlsPlayer from '@/app/components/HlsPlayer';
 import { Button } from '@/components/ui/button';
 import { getEpisode, getEpisodesCount, getSeasonsCount } from '@/app/queries';
+import { Suspense } from 'react'; 
+import dynamic from 'next/dynamic';
+
+const HlsPlayer = dynamic(() => import('@/app/components/HlsPlayer'), { ssr: true });
 
 export default async function Page({ params }: { params: Promise<{ season: string, episode: string }> }) {
   const { season: seasonId, episode: episodeNumber } = await params;
@@ -73,12 +77,14 @@ export default async function Page({ params }: { params: Promise<{ season: strin
           }
         </div>
       </div>
-      <div className='flex flex-col items-center justify-center'>  
-        <HlsPlayer
-          videoUrl={video}
-          hasNextEpisode={hasNextEpisode}
-          hasNextSeason={hasNextSeason}
-        />
+      <div className='flex flex-col items-center justify-center'> 
+        <Suspense fallback={<div>Loading...</div>}>
+          <HlsPlayer
+            videoUrl={video}
+            hasNextEpisode={hasNextEpisode}
+            hasNextSeason={hasNextSeason}
+          />
+        </Suspense>
       </div>
     </div>
   )
