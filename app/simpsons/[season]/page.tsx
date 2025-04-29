@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { getEpisodes, getSeasonsCount, getSeenEpisodes } from '@/app/queries';
@@ -31,12 +32,12 @@ export default async function Page({ params }: { params: Promise<{ season: strin
 
   return (
     <>
-      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
+      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-center sm:items-center mb-3'>
         <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
           {
             hasPrevSeason && (
-              <Link href={`/simpsons/${prevSeason}`} className='m-2 first:sm:ml-0'>
-                <Button>Попередній сезон</Button>
+              <Link href={`/simpsons/${prevSeason}`} className='flex items-center m-2 first:sm:m-0'>
+                <Button size="icon"><ChevronLeft/></Button>
               </Link>
             )
           }
@@ -45,8 +46,8 @@ export default async function Page({ params }: { params: Promise<{ season: strin
         <div className='flex w-full justify-center order-3 sm:w-auto'>
           {
             hasNextSeason && (
-              <Link href={`/simpsons/${nextSeason}`} className='m-2 first:sm:mr-0'>
-                <Button>Наступний сезон</Button>
+              <Link href={`/simpsons/${nextSeason}`} className='flex items-center m-2 first:sm:m-0'>
+                <Button size="icon"><ChevronRight/></Button>
               </Link>
             )
           }

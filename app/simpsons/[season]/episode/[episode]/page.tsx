@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
 import HlsPlayer from '@/app/components/HlsPlayer';
 
@@ -46,40 +47,24 @@ export default async function Page({ params }: { params: Promise<{ season: strin
         seasonId={seasonId}
         episodeNumber={episodeNumber}
       />
-      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
-        <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
-          {
-            hasPrevSeason && (
-              <Link href={`/simpsons/${prevSeason}/episode/1`} className='m-2 first:sm:ml-0'>
-                <Button>Попередній сезон</Button>
-              </Link>
-            )
-          }
-          {
-            hasNextSeason && (
-              <Link href={`/simpsons/${nextSeason}/episode/1`} className='m-2 first:sm:ml-0'>
-                <Button>Наступний сезон</Button>
-              </Link>
-            )
-          }
-        </div>
-        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{seasonId} Сезон | {episodeNumber} Епізод</p>
-        <div className='flex w-full justify-center order-3 sm:w-auto'>
-          {
-            hasPrevEpisode && (
-              <Link href={`/simpsons/${seasonId}/episode/${prevEpisode}`} className='m-2 last:sm:mr-0'>
-                <Button>Попередній eпізод</Button>
-              </Link>
-            )
-          }
-          {
-            hasNextEpisode && (
-              <Link href={`/simpsons/${seasonId}/episode/${nextEpisode}`} className='m-2 last:sm:mr-0'>
-                <Button>Наступний епізод</Button>
-              </Link>
-            )
-          }
-        </div>
+      <div className='flex flex-wrap sm:flex-row sm:justify-between sm:items-center'>
+        <p className='flex items-center justify-center text-center w-full mb-3 space-x-3.5'>
+          <Link href={`/simpsons/${prevSeason}/episode/1`} className='flex items-center'>
+            <Button disabled={!hasPrevSeason} size="icon"><ChevronLeft/></Button>
+          </Link>
+          <p>{seasonId} Сезон</p>
+          <Link href={`/simpsons/${nextSeason}/episode/1`} className='flex items-center'>
+            <Button disabled={!hasNextSeason} size="icon"><ChevronRight/></Button>
+          </Link>
+          <p>|</p>
+          <Link href={`/simpsons/${seasonId}/episode/${prevEpisode}`} className='flex items-center'>
+            <Button disabled={!hasPrevEpisode} size="icon"><ChevronLeft/></Button>
+          </Link>
+          <p>{episodeNumber} Епізод</p>
+          <Link href={`/simpsons/${seasonId}/episode/${nextEpisode}`} className='flex items-center'>
+            <Button disabled={!hasNextEpisode} size="icon"><ChevronRight/></Button>
+          </Link>
+        </p>
       </div>
       <div className='flex flex-col items-center justify-center'> 
         <HlsPlayer
