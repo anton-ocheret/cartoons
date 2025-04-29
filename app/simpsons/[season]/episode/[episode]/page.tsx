@@ -5,7 +5,7 @@ import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/qu
 import { Suspense } from 'react'; 
 import dynamic from 'next/dynamic';
 
-const HlsPlayer = dynamic(() => import('@/app/components/HlsPlayer'), { ssr: true });
+const HlsPlayer = dynamic(() => import('@/app/components/HlsPlayer'), { ssr: false });
 
 export default async function Page({ params }: { params: Promise<{ season: string, episode: string }> }) {
   const { season: seasonId, episode: episodeNumber } = await params;
