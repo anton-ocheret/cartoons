@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { getEpisodes, getSeasonsCount } from '@/app/queries';
+import { getEpisodes, getSeasonsCount, getSeenEpisodes } from '@/app/queries';
+import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
 
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
   const { season: seasonId } = await params;
@@ -25,6 +26,8 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   const nextSeason = Number(seasonId) + 1;
   const hasPrevSeason = Number(seasonId) > 1;
   const prevSeason = Number(seasonId) - 1;
+
+  const seenEpisodes = await getSeenEpisodes(Number(seasonId));
 
   return (
     <>
@@ -51,12 +54,25 @@ export default async function Page({ params }: { params: Promise<{ season: strin
       </div>
       
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-        {episodes.map(({ poster, number, season_id }) => {
+        {episodes.map(({ poster, number, season_id, id }) => {
+          const isSeen = seenEpisodes.some((episode) => episode.episode_id === Number(id));
           return (
-            <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
-              <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
-              <h6 className='text-lg'>{number} Епізод</h6>
-            </Link>
+            <div className='flex flex-col justify-center' key={number}>
+              <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
+                <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
+              </Link>
+              <div className='flex flex-row items-center justify-between'>
+                <h6 className='text-lg'>{number} Епізод</h6>
+                <TogleSeenButton
+                  className='pointer-events-none'
+                  noLabel
+                  seen={isSeen}
+                  seasonId={seasonId}
+                  episodeNumber={number}
+                  disabled
+                />
+              </div>
+            </div>
           )
         })}
       </div>

@@ -73,6 +73,15 @@ export const getSeen = async (seasonId: number, episodeId: number) => {
   }
 }
 
+export const getSeenEpisodes = async (seasonId: number) => {
+  try {
+    const seenEpisodes = await sql`SELECT * FROM seen WHERE season_id = ${seasonId}`;
+    return seenEpisodes;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to get seen episodes.');
+  }
+}
 export const getSeenCount = async () => {
   try {
     const seenCount = await sql`SELECT COUNT(*) FROM seen`;

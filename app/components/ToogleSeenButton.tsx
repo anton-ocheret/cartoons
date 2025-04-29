@@ -4,7 +4,15 @@ import { clsx } from 'clsx';
 import { Button } from "@/components/ui/button";
 import { togleSeenAction } from '../queries';
 
-export function TogleSeenButton(props: { seen: boolean, seasonId: string, episodeNumber: string }) {
+export function TogleSeenButton(props: {
+  seen: boolean,
+  seasonId: string,
+  episodeNumber: string,
+  noLabel?: boolean,
+  className?: string,
+  disabled?: boolean,
+}) {
+  const { noLabel = false, disabled = false } = props;
   const Icon = props.seen ? <Eye /> : <EyeOff />;
   const text = props.seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
 
@@ -19,11 +27,13 @@ export function TogleSeenButton(props: { seen: boolean, seasonId: string, episod
           size="icon"
           className={clsx('mr-2', {
             'bg-green-500 hover:bg-green-600': props.seen,
+            'opacity-80!': disabled,
           })}
+          disabled={disabled}
         >
           {Icon}
         </Button>
-        {text}
+        {!noLabel && text}
       </form>
     </>
   )
