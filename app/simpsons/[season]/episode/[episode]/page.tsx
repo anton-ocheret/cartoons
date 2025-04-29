@@ -2,10 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
 import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
-import { Suspense } from 'react'; 
-import dynamic from 'next/dynamic';
-
-const HlsPlayer = dynamic(() => import('@/app/components/HlsPlayer'), { ssr: false });
+import HlsPlayer from '@/app/components/HlsPlayer';
 
 export default async function Page({ params }: { params: Promise<{ season: string, episode: string }> }) {
   const { season: seasonId, episode: episodeNumber } = await params;
@@ -85,13 +82,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
         </div>
       </div>
       <div className='flex flex-col items-center justify-center'> 
-        <Suspense fallback={<div>Loading...</div>}>
-          <HlsPlayer
-            videoUrl={video}
-            hasNextEpisode={hasNextEpisode}
-            hasNextSeason={hasNextSeason}
-          />
-        </Suspense>
+        <HlsPlayer
+          videoUrl={video}
+          hasNextEpisode={hasNextEpisode}
+          hasNextSeason={hasNextSeason}
+        />
       </div>
     </div>
   )
