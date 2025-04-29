@@ -1,17 +1,13 @@
-import db from '@/db';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { getEpisodes, getSeasonsCount } from '@/app/queries';
 
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
-  const { season } = await params;
-  const seasonData = db.find(({ number }) => number === season);
-  const seasonsCount = db.length;
-  const hasNextSeason = Number(season) < seasonsCount;
-  const nextSeason = Number(season) + 1;
-  const hasPrevSeason = Number(season) > 1;
-  const prevSeason = Number(season) - 1;
-  if (!seasonData) {
+  const { season: seasonId } = await params;
+  const episodes = await getEpisodes(Number(seasonId));
+
+  if (!episodes) {
     return (
       <>
         <div className='flex flex-col items-center justify-center h-screen'>
@@ -24,37 +20,40 @@ export default async function Page({ params }: { params: Promise<{ season: strin
     );
   }
 
-  const episodes = seasonData.episodes || [];
+  const seasonsCount = await getSeasonsCount();
+  const hasNextSeason = Number(seasonId) < seasonsCount;
+  const nextSeason = Number(seasonId) + 1;
+  const hasPrevSeason = Number(seasonId) > 1;
+  const prevSeason = Number(seasonId) - 1;
 
   return (
     <>
-      
-        <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
-          <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
-            {
-              hasPrevSeason && (
-                <Link href={`/simpsons/${prevSeason}`} className='m-2 first:sm:ml-0'>
-                  <Button>Попередній сезон</Button>
-                </Link>
-              )
-            }
-          </div>
-          <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{season} Сезон</p>
-          <div className='flex w-full justify-center order-3 sm:w-auto'>
-            {
-              hasNextSeason && (
-                <Link href={`/simpsons/${nextSeason}`} className='m-2 first:sm:mr-0'>
-                  <Button>Наступний сезон</Button>
-                </Link>
-              )
-            }
-          </div>
+      <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
+        <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
+          {
+            hasPrevSeason && (
+              <Link href={`/simpsons/${prevSeason}`} className='m-2 first:sm:ml-0'>
+                <Button>Попередній сезон</Button>
+              </Link>
+            )
+          }
         </div>
+        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{seasonId} Сезон</p>
+        <div className='flex w-full justify-center order-3 sm:w-auto'>
+          {
+            hasNextSeason && (
+              <Link href={`/simpsons/${nextSeason}`} className='m-2 first:sm:mr-0'>
+                <Button>Наступний сезон</Button>
+              </Link>
+            )
+          }
+        </div>
+      </div>
       
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-        {episodes.map(({ poster, number }) => {
+        {episodes.map(({ poster, number, season_id }) => {
           return (
-            <Link  href={`/simpsons/${Number(seasonData.number)}/episode/${Number(number)}`} key={number}>
+            <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
               <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
               <h6 className='text-lg'>{number} Епізод</h6>
             </Link>

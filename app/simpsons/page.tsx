@@ -1,4 +1,3 @@
-import db from '@/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getSeasons } from '@/app/queries';
@@ -6,7 +5,6 @@ import { getSeasons } from '@/app/queries';
 export default async function Page() {
   const seasons = await getSeasons();
 
-  console.log(seasons);
   return (
     <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
       {seasons.map(({ poster, id }) => {
