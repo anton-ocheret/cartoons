@@ -51,7 +51,7 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
           hls = null;
         }
       };
-    }, [videoUrl, router, params]);
+    }, [videoUrl, router, params, hasNextEpisode, hasNextSeason]);
 
     return (
       <video

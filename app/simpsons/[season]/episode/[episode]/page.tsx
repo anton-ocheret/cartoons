@@ -1,52 +1,40 @@
-import db from '@/db';
 import Link from 'next/link';
 import HlsPlayer from '@/app/components/HlsPlayer';
 import { Button } from '@/components/ui/button';
+import { getEpisode, getEpisodesCount, getSeasonsCount } from '@/app/queries';
 
 export default async function Page({ params }: { params: Promise<{ season: string, episode: string }> }) {
-  const { season, episode } = await params;
+  const { season: seasonId, episode: episodeNumber } = await params;
+  const seasonsCount = await getSeasonsCount();
+  const episodesCount = await getEpisodesCount(Number(seasonId));
+  const episodeData = await getEpisode(Number(seasonId), Number(episodeNumber));
+  const noSeasonData = Number(seasonId) > seasonsCount;
 
-  const seasonData = db.find(({ number }) => number === season);
-
-  if (!seasonData) {
-    return (
-      <>
-        <div className='flex flex-col items-center justify-center h-screen'>
-          <p className='text-2xl font-bold mb-4'>Сезон не найден</p>
-          <Link href='/simpsons'>
-            <Button>На головну</Button>
-          </Link>
-        </div>
-      </>
-    );
-  }
-
-  const episodes = seasonData.episodes || [];
-
-  const hasPrevEpisode = Number(episode) > 1;
-  const prevEpisode = Number(episode) - 1;
-  const hasNextEpisode = Number(episode) < (episodes.length || 0);
-  const nextEpisode = Number(episode) + 1;
-  const episodeData = episodes.find(({ number }) => Number(number) === Number(episode));
-
-  if (!episodeData) {
+  if (!episodeData || noSeasonData) {
+    const seasonToGo = Number(seasonId) > Number(seasonsCount) ? 1 : Number(seasonId) ;
     return (
       <>
         <div className='flex flex-col items-center justify-center h-screen'>
           <p className='text-2xl font-bold mb-4'>Епізод не найден</p>
-          <Link href={`/simpsons/${seasonData.number}`}>  
-            <Button>До епізодів {season} сезону</Button>
+          <Link href={`/simpsons/${seasonToGo}`}>  
+            <Button>До епізодів {seasonToGo} сезону</Button>
           </Link>
         </div>
       </>
     );
   }
 
-  const seasonsCount = db.length;
-  const hasNextSeason = Number(season) < seasonsCount;
-  const nextSeason = Number(season) + 1;
-  const hasPrevSeason = Number(season) > 1;
-  const prevSeason = Number(season) - 1;
+  const { video } = episodeData;
+
+  const hasPrevEpisode = Number(episodeNumber) > 1;
+  const prevEpisode = Number(episodeNumber) - 1;
+  const hasNextEpisode = Number(episodeNumber) < Number(episodesCount);
+  const nextEpisode = Number(episodeNumber) + 1;
+
+  const hasNextSeason = Number(seasonId) < Number(seasonsCount);
+  const nextSeason = Number(seasonId) + 1;
+  const hasPrevSeason = Number(seasonId) > 1;
+  const prevSeason = Number(seasonId) - 1;
   
   return (
     <div>
@@ -67,18 +55,18 @@ export default async function Page({ params }: { params: Promise<{ season: strin
             )
           }
         </div>
-        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{season} Сезон | {episode} Епізод</p>
+        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{seasonId} Сезон | {episodeNumber} Епізод</p>
         <div className='flex w-full justify-center order-3 sm:w-auto'>
           {
             hasPrevEpisode && (
-              <Link href={`/simpsons/${seasonData.number}/episode/${prevEpisode}`} className='m-2 last:sm:mr-0'>
+              <Link href={`/simpsons/${seasonId}/episode/${prevEpisode}`} className='m-2 last:sm:mr-0'>
                 <Button>Попередній eпізод</Button>
               </Link>
             )
           }
           {
             hasNextEpisode && (
-              <Link href={`/simpsons/${seasonData.number}/episode/${nextEpisode}`} className='m-2 last:sm:mr-0'>
+              <Link href={`/simpsons/${seasonId}/episode/${nextEpisode}`} className='m-2 last:sm:mr-0'>
                 <Button>Наступний епізод</Button>
               </Link>
             )
@@ -87,9 +75,9 @@ export default async function Page({ params }: { params: Promise<{ season: strin
       </div>
       <div className='flex flex-col items-center justify-center'>  
         <HlsPlayer
+          videoUrl={video}
           hasNextEpisode={hasNextEpisode}
           hasNextSeason={hasNextSeason}
-          videoUrl={episodeData?.video || ''}
         />
       </div>
     </div>
