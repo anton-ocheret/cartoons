@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import { getEpisodes, getSeasonsCount, getSeenEpisodes } from '@/app/queries';
 import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
@@ -33,25 +34,13 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   return (
     <>
       <div className='flex flex-col flex-wrap sm:flex-row sm:justify-center sm:items-center mb-3'>
-        <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
-          {
-            hasPrevSeason && (
-              <Link href={`/simpsons/${prevSeason}`} className='flex items-center m-2 first:sm:m-0'>
-                <Button size="icon"><ChevronLeft/></Button>
-              </Link>
-            )
-          }
-        </div>
-        <p className='flex-shrink-0 text-center w-full m-2 order-1 sm:w-auto'>{seasonId} Сезон</p>
-        <div className='flex w-full justify-center order-3 sm:w-auto'>
-          {
-            hasNextSeason && (
-              <Link href={`/simpsons/${nextSeason}`} className='flex items-center m-2 first:sm:m-0'>
-                <Button size="icon"><ChevronRight/></Button>
-              </Link>
-            )
-          }
-        </div>
+        <Link href={`/simpsons/${prevSeason}`} className={clsx({ 'pointer-events-none': !hasPrevSeason })}>
+          <Button size="icon" disabled={!hasPrevSeason}><ChevronLeft/></Button>
+        </Link>
+        <p className='flex-shrink-0 text-center w-full m-2 sm:w-auto'>{seasonId} Сезон</p>
+        <Link href={`/simpsons/${nextSeason}`} className={clsx({ 'pointer-events-none': !hasNextSeason })}>
+          <Button size="icon" disabled={!hasNextSeason}><ChevronRight/></Button>
+        </Link>
       </div>
       
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>

@@ -4,6 +4,7 @@ import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
 import HlsPlayer from '@/app/components/HlsPlayer';
+import clsx from 'clsx';
 
 export default async function Page({ params }: { params: Promise<{ season: string, episode: string }> }) {
   const { season: seasonId, episode: episodeNumber } = await params;
@@ -48,23 +49,23 @@ export default async function Page({ params }: { params: Promise<{ season: strin
         episodeNumber={episodeNumber}
       />
       <div className='flex flex-wrap sm:flex-row sm:justify-between sm:items-center'>
-        <p className='flex items-center justify-center text-center w-full mb-3 space-x-3.5'>
-          <Link href={`/simpsons/${prevSeason}/episode/1`} className='flex items-center'>
+        <div className='flex items-center justify-center text-center w-full mb-3 space-x-3.5'>
+          <Link href={`/simpsons/${prevSeason}/episode/1`} className={clsx({ 'pointer-events-none': !hasPrevSeason })}>
             <Button disabled={!hasPrevSeason} size="icon"><ChevronLeft/></Button>
           </Link>
           <p>{seasonId} Сезон</p>
-          <Link href={`/simpsons/${nextSeason}/episode/1`} className='flex items-center'>
+          <Link href={`/simpsons/${nextSeason}/episode/1`} className={clsx({ 'pointer-events-none': !hasNextSeason })}>
             <Button disabled={!hasNextSeason} size="icon"><ChevronRight/></Button>
           </Link>
           <p>|</p>
-          <Link href={`/simpsons/${seasonId}/episode/${prevEpisode}`} className='flex items-center'>
+          <Link href={`/simpsons/${seasonId}/episode/${prevEpisode}`} className={clsx({ 'pointer-events-none': !hasPrevEpisode })}>
             <Button disabled={!hasPrevEpisode} size="icon"><ChevronLeft/></Button>
           </Link>
           <p>{episodeNumber} Епізод</p>
-          <Link href={`/simpsons/${seasonId}/episode/${nextEpisode}`} className='flex items-center'>
+          <Link href={`/simpsons/${seasonId}/episode/${nextEpisode}`} className={clsx({ 'pointer-events-none': !hasNextEpisode })}>
             <Button disabled={!hasNextEpisode} size="icon"><ChevronRight/></Button>
           </Link>
-        </p>
+        </div>
       </div>
       <div className='flex flex-col items-center justify-center'> 
         <HlsPlayer
