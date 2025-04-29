@@ -3,6 +3,23 @@ import { revalidatePath } from 'next/cache';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+export const getSeasonsPageData = async () => {
+  try {
+    const result = await sql`
+      SELECT s.id AS season_id, s.poster, COUNT(e.id) AS total_episodes, COUNT(DISTINCT seen.episode_id) AS seen_episodes
+      FROM seasons s
+      LEFT JOIN episodes e ON s.id = e.season_id
+      LEFT JOIN seen ON s.id = seen.season_id AND e.id = seen.episode_id
+      GROUP BY s.id, s.cartoon_id
+      ORDER BY s.cartoon_id, s.id
+    `;
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to get seasons page data.');
+  }
+}
+
 export const getSeasons = async () => {
   try {
     const seasons = await sql`SELECT * FROM seasons`;
