@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { getAllEpisodesCount } from "@/app/queries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,11 +21,12 @@ export const metadata: Metadata = {
 
 export const revalidate = 2;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const allEpisodesCount = await getAllEpisodesCount();
   return (
     <html lang="en">
       <head>
@@ -40,13 +42,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col text-gray-800 dark:bg-black dark:text-gray-400`}
       >
         <header>
-          <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) py-5 lg:py-8 relative">
+          <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) py-5 lg:py-8 relative flex justify-between items-center">
             <Link
               href="/simpsons"
               className="py-2 text-lg font-medium text-gray-600 hover:text-blue-500 dark:text-gray-400"
             >
               Simpsons
             </Link>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Переглянуто 0 з {allEpisodesCount} епізодів</p>
           </div>
         </header>
         <main className="flex-1">
