@@ -16,6 +16,7 @@ export async function GET() {
       await seedCartoons(),
       await seedSeasons(),
       await seedEpisodes(),
+      await seedSeen(),     
     ]);
 
     return Response.json({ message: 'Database seeded successfully' });
@@ -110,5 +111,24 @@ async function seedEpisodes() {
   } catch (error) {
     console.error(error);
     throw new Error('Failed to seed episodes.');
+  }
+}
+
+async function seedSeen() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS seen (
+        id SERIAL PRIMARY KEY,
+        episode_id INTEGER NOT NULL,
+        season_id INTEGER NOT NULL,
+        cartoon_id INTEGER NOT NULL,
+        FOREIGN KEY (season_id) REFERENCES seasons(id),
+        FOREIGN KEY (cartoon_id) REFERENCES cartoons(id),
+        FOREIGN KEY (episode_id) REFERENCES episodes(id)
+      );
+    `;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to seed seen.');
   }
 }

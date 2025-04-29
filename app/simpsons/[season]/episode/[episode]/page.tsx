@@ -1,7 +1,7 @@
 import Link from 'next/link';
-// import HlsPlayer from '@/app/components/HlsPlayer';
 import { Button } from '@/components/ui/button';
-import { getEpisode, getEpisodesCount, getSeasonsCount } from '@/app/queries';
+import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
+import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
 import { Suspense } from 'react'; 
 import dynamic from 'next/dynamic';
 
@@ -28,6 +28,8 @@ export default async function Page({ params }: { params: Promise<{ season: strin
     );
   }
 
+  const seen = await getSeen(Number(seasonId), Number(episodeData.id));
+
   const { video } = episodeData;
 
   const hasPrevEpisode = Number(episodeNumber) > 1;
@@ -42,6 +44,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   
   return (
     <div>
+      <TogleSeenButton
+        seen={Boolean(seen)}
+        seasonId={seasonId}
+        episodeNumber={episodeNumber}
+      />
       <div className='flex flex-col flex-wrap sm:flex-row sm:justify-between sm:items-center'>
         <div className='flex w-full justify-center order-3 sm:w-auto sm:order-1'>
           {

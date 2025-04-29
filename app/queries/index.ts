@@ -1,4 +1,5 @@
 import postgres from 'postgres';
+import { revalidatePath } from 'next/cache';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -59,5 +60,47 @@ export const getAllEpisodesCount = async () => {
   } catch (error) {
     console.error(error);
     throw new Error('Failed to get all episodes.');
+  }
+};
+
+export const getSeen = async (seasonId: number, episodeId: number) => {
+  try {
+    const seen = await sql`SELECT * FROM seen WHERE season_id = ${seasonId} AND episode_id = ${episodeId}`;
+    return seen[0];
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to get seen.');
+  }
+}
+
+export const getSeenCount = async () => {
+  try {
+    const seenCount = await sql`SELECT COUNT(*) FROM seen`;
+    return Number(seenCount[0].count);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to get seen count.');
+  }
+}
+
+export const togleSeenAction = async (formData: FormData) => {
+  'use server';
+  try {
+    const cartoonId = 1;
+    const seasonId = formData.get('seasonId');
+    const episodeNumber = formData.get('episodeNumber');
+    const episode = await getEpisode(Number(seasonId), Number(episodeNumber));
+    const episodeId = episode.id;
+    const seen = await getSeen(Number(seasonId), Number(episodeId));
+    if (seen) {
+      await sql`DELETE FROM seen WHERE season_id = ${Number(seasonId)} AND episode_id = ${Number(episodeId)}`;
+    } else {
+      await sql`INSERT INTO seen (cartoon_id, season_id, episode_id) VALUES (${Number(cartoonId)}, ${Number(seasonId)}, ${Number(episodeId)})`;
+    }
+
+    revalidatePath(`/simpsons/${seasonId}/episode/${episodeNumber}`);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to mark as seen.');
   }
 };

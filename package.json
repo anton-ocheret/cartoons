@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.2.3",
     "@radix-ui/react-slot": "^1.2.0",
     "@types/hls.js": "^0.13.3",
     "class-variance-authority": "^0.7.1",

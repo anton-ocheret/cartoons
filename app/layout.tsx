@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { getAllEpisodesCount } from "@/app/queries";
+import { getAllEpisodesCount, getSeenCount } from "@/app/queries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +27,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const allEpisodesCount = await getAllEpisodesCount();
+  const seenCount = await getSeenCount();
   return (
     <html lang="en">
       <head>
@@ -49,7 +50,7 @@ export default async function RootLayout({
             >
               Simpsons
             </Link>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Переглянуто 0 з {allEpisodesCount} епізодів</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Переглянуто {seenCount} з {allEpisodesCount} епізодів</p>
           </div>
         </header>
         <main className="flex-1">
