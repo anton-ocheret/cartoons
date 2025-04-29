@@ -64,12 +64,10 @@ export default async function Page({ params }: { params: Promise<{ season: strin
               <div className='flex flex-row items-center justify-between'>
                 <h6 className='text-lg'>{number} Епізод</h6>
                 <TogleSeenButton
-                  className='pointer-events-none'
                   noLabel
                   seen={isSeen}
                   seasonId={seasonId}
                   episodeNumber={number}
-                  disabled
                 />
               </div>
             </div>

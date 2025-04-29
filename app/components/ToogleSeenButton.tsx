@@ -9,7 +9,6 @@ export function TogleSeenButton(props: {
   seasonId?: string,
   episodeNumber?: string,
   noLabel?: boolean,
-  className?: string,
   disabled?: boolean,
 }) {
   const {
