@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ToggleSeenButton } from '@/app/components/ToogleSeenButton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
+import { getEpisode, getEpisodesCount, getSeasonsCount } from '@/app/queries';
 import HlsPlayer from '@/app/components/HlsPlayer';
 import clsx from 'clsx';
 
