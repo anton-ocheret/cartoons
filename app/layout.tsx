@@ -37,7 +37,6 @@ export default async function RootLayout({
         <meta name="author" content="Сімпсони без реклами" />
         <meta name="robots" content="index, follow" />
         <meta name="google" content="notranslate" />
-        <title>Сімпсони без реклами</title>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col text-gray-800 dark:bg-black dark:text-gray-400`}
