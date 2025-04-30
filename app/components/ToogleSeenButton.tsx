@@ -1,41 +1,52 @@
+'use client';
+
 import { Eye, EyeOff } from 'lucide-react';
 import { clsx } from 'clsx';
 
 import { Button } from "@/components/ui/button";
 import { togleSeenAction } from '../queries';
+import { useState } from 'react';
 
-export function TogleSeenButton(props: {
+export function ToggleSeenButton(props: {
   seen: boolean,
   seasonId?: string,
   episodeNumber?: string,
   noLabel?: boolean,
   disabled?: boolean,
+  onToggle?: () => void,
 }) {
   const {
     noLabel = false,
   } = props;
-  const Icon = props.seen ? <Eye /> : <EyeOff />;
-  const text = props.seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
-  const disabled = !props.seasonId || !props.episodeNumber || props.disabled;
-  return (
-    <>
-      <form action={togleSeenAction} className='flex flex-row items-center'>
-        <input type="hidden" name="seasonId" value={props.seasonId} />
-        <input type="hidden" name="episodeNumber" value={props.episodeNumber} />
+  const [seen, setSeen] = useState(props.seen);
 
-        <Button
-          type="submit"
-          size="icon"
-          className={clsx('mr-2', {
-            'bg-green-500 hover:bg-green-600': props.seen,
-            'opacity-80!': disabled,
-          })}
-          disabled={disabled}
-        >
-          {Icon}
-        </Button>
-        {!noLabel && text}
-      </form>
-    </>
+  const Icon = seen ? <Eye /> : <EyeOff />;
+  const text = seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
+
+  const disabled = !props.seasonId || !props.episodeNumber || props.disabled;
+  const toggleSeen = async () => {
+    const formData = new FormData();
+    formData.append('seasonId', String(props.seasonId));
+    formData.append('episodeNumber', String(props.episodeNumber));
+
+    await togleSeenAction(formData);
+    setSeen((prevSeen) => !prevSeen);
+  }
+  return (
+    <div className='flex flex-row items-center'>
+      <Button
+        type="submit"
+        size="icon"
+        className={clsx('mr-2', {
+          'bg-green-500 hover:bg-green-600': seen,
+          'opacity-80!': disabled,
+        })}
+        disabled={disabled}
+        onClick={toggleSeen}
+      >
+        {Icon}
+      </Button>
+      {!noLabel && text}
+    </div>
   )
 }

@@ -1,3 +1,4 @@
+'use server';
 import postgres from 'postgres';
 import { revalidatePath } from 'next/cache';
 
@@ -126,7 +127,6 @@ export const getSeenCount = async () => {
 }
 
 export const togleSeenAction = async (formData: FormData) => {
-  'use server';
   try {
     const cartoonId = 1;
     const seasonId = formData.get('seasonId');
@@ -139,8 +139,6 @@ export const togleSeenAction = async (formData: FormData) => {
     } else {
       await sql`INSERT INTO seen (cartoon_id, season_id, episode_id) VALUES (${Number(cartoonId)}, ${Number(seasonId)}, ${Number(episodeId)})`;
     }
-
-    revalidatePath(`/simpsons/${seasonId}/episode/${episodeNumber}`);
   } catch (error) {
     console.error(error);
     throw new Error('Failed to mark as seen.');

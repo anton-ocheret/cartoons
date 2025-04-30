@@ -4,7 +4,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import { getEpisodes, getSeasonsCount } from '@/app/queries';
-import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
+import { ToggleSeenButton } from '@/app/components/ToogleSeenButton';
 
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
   const { season: seasonId } = await params;
@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
               </Link>
               <div className='flex flex-row items-center justify-between'>
                 <h6 className='text-lg'>{number} Епізод</h6>
-                <TogleSeenButton
+                <ToggleSeenButton
                   noLabel
                   seen={seen}
                   seasonId={seasonId}

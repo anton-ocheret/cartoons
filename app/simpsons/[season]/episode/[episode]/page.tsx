@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
+import { ToggleSeenButton } from '@/app/components/ToogleSeenButton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getEpisode, getEpisodesCount, getSeasonsCount, getSeen } from '@/app/queries';
 import HlsPlayer from '@/app/components/HlsPlayer';
@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   
   return (
     <div>
-      <TogleSeenButton
+      <ToggleSeenButton
         seen={Boolean(seen)}
         seasonId={seasonId}
         episodeNumber={episodeNumber}
