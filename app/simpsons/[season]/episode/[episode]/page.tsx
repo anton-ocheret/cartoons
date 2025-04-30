@@ -27,8 +27,6 @@ export default async function Page({ params }: { params: Promise<{ season: strin
     );
   }
 
-  const seen = await getSeen(Number(seasonId), Number(episodeData.id));
-
   const { video } = episodeData;
 
   const hasPrevEpisode = Number(episodeNumber) > 1;
@@ -40,11 +38,11 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   const nextSeason = Number(seasonId) + 1;
   const hasPrevSeason = Number(seasonId) > 1;
   const prevSeason = Number(seasonId) - 1;
-  
+  console.log(episodeData);
   return (
     <div>
       <ToggleSeenButton
-        seen={Boolean(seen)}
+        seen={Boolean(episodeData.seen)}
         seasonId={seasonId}
         episodeNumber={episodeNumber}
       />

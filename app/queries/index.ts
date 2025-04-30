@@ -35,7 +35,7 @@ export const getEpisodes = async (seasonId: number) => {
   try {
     const episodes = await sql`
       SELECT episodes.*, CASE WHEN seen.episode_id IS NOT NULL THEN TRUE ELSE FALSE END AS seen FROM episodes
-      LEFT JOIN seen ON episodes.id = seen.episode_id
+      LEFT JOIN seen ON episodes.id = seen.episode_id AND seen.season_id = ${seasonId}
       WHERE episodes.season_id = ${seasonId}
       ORDER BY episodes.number
     `;
@@ -48,7 +48,11 @@ export const getEpisodes = async (seasonId: number) => {
 
 export const getEpisode = async (seasonId: number, episodeNumber: number) => {
   try {
-    const episode = await sql`SELECT * FROM episodes WHERE season_id = ${seasonId} AND number = ${episodeNumber}`;
+    const episode = await sql`
+      SELECT episodes.*, CASE WHEN seen.episode_id IS NOT NULL THEN TRUE ELSE FALSE END AS seen FROM episodes
+      LEFT JOIN seen ON episodes.id = seen.episode_id AND seen.season_id = ${seasonId}
+      WHERE episodes.season_id = ${seasonId} AND episodes.number = ${episodeNumber}
+    `;
     return episode[0];
   } catch (error) {
     console.error(error);
@@ -133,8 +137,8 @@ export const togleSeenAction = async (formData: FormData) => {
     const episodeNumber = formData.get('episodeNumber');
     const episode = await getEpisode(Number(seasonId), Number(episodeNumber));
     const episodeId = episode.id;
-    const seen = await getSeen(Number(seasonId), Number(episodeId));
-    if (seen) {
+
+    if (episode.seen) {
       await sql`DELETE FROM seen WHERE season_id = ${Number(seasonId)} AND episode_id = ${Number(episodeId)}`;
     } else {
       await sql`INSERT INTO seen (cartoon_id, season_id, episode_id) VALUES (${Number(cartoonId)}, ${Number(seasonId)}, ${Number(episodeId)})`;
