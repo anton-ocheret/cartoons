@@ -32,7 +32,12 @@ export const getSeasons = async () => {
 
 export const getEpisodes = async (seasonId: number) => {
   try {
-    const episodes = await sql`SELECT * FROM episodes WHERE season_id = ${seasonId}`;
+    const episodes = await sql`
+      SELECT episodes.*, CASE WHEN seen.episode_id IS NOT NULL THEN TRUE ELSE FALSE END AS seen FROM episodes
+      LEFT JOIN seen ON episodes.id = seen.episode_id
+      WHERE episodes.season_id = ${seasonId}
+      ORDER BY episodes.number
+    `;
     return episodes;
   } catch (error) {
     console.error(error);

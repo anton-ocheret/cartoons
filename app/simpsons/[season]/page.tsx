@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
-import { getEpisodes, getSeasonsCount, getSeenEpisodes } from '@/app/queries';
+import { getEpisodes, getSeasonsCount } from '@/app/queries';
 import { TogleSeenButton } from '@/app/components/ToogleSeenButton';
 
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
@@ -29,8 +29,6 @@ export default async function Page({ params }: { params: Promise<{ season: strin
   const hasPrevSeason = Number(seasonId) > 1;
   const prevSeason = Number(seasonId) - 1;
 
-  const seenEpisodes = await getSeenEpisodes(Number(seasonId));
-
   return (
     <>
       <div className='flex flex-wrap flex-row justify-center items-center mb-3'>
@@ -44,8 +42,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
       </div>
       
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-        {episodes.map(({ poster, number, season_id, id }) => {
-          const isSeen = seenEpisodes.some((episode) => episode.episode_id === Number(id));
+        {episodes.map(({ poster, number, season_id, seen }) => {
           return (
             <div className='flex flex-col justify-center' key={number}>
               <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
@@ -55,7 +52,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
                 <h6 className='text-lg'>{number} Епізод</h6>
                 <TogleSeenButton
                   noLabel
-                  seen={isSeen}
+                  seen={seen}
                   seasonId={seasonId}
                   episodeNumber={number}
                 />
