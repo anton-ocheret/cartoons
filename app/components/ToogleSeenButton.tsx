@@ -5,7 +5,8 @@ import { clsx } from 'clsx';
 
 import { Button } from "@/components/ui/button";
 import { togleSeenAction } from '../queries';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { SeenContext } from '@/app/components/Providers';
 
 export function ToggleSeenButton(props: {
   seen: boolean,
@@ -19,6 +20,7 @@ export function ToggleSeenButton(props: {
     noLabel = false,
   } = props;
   const [seen, setSeen] = useState(props.seen);
+  const { fetchSeenInformation } = useContext(SeenContext);
 
   const Icon = seen ? <Eye /> : <EyeOff />;
   const text = seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
@@ -31,6 +33,7 @@ export function ToggleSeenButton(props: {
 
     await togleSeenAction(formData);
     setSeen((prevSeen) => !prevSeen);
+    fetchSeenInformation();
   }
   return (
     <div className='flex flex-row items-center'>

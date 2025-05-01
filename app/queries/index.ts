@@ -119,10 +119,15 @@ export const getSeenEpisodesCount = async (seasonId: number) => {
   }
 }
 
-export const getSeenCount = async () => {
+export const getSeenInformation = async () => {
   try {
-    const seenCount = await sql`SELECT COUNT(*) FROM seen`;
-    return Number(seenCount[0].count);
+    const seenInformation = await sql`
+      select count(episodes) as episodes, count(seen) as seen
+      from episodes
+      left join seen ON episodes.id = seen.episode_id
+    `;
+
+    return seenInformation[0];
   } catch (error) {
     console.error(error);
     throw new Error('Failed to get seen count.');

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import { getAllEpisodesCount, getSeenCount } from "@/app/queries";
+import { getSeenInformation } from "@/app/queries";
+import { Header } from "@/app/components/Header";
+import { Providers } from "@/app/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +27,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const allEpisodesCount = await getAllEpisodesCount();
-  const seenCount = await getSeenCount();
+  const seenCount = await getSeenInformation();
+
   return (
     <html lang="en">
       <head>
@@ -41,22 +42,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col text-gray-800 dark:bg-black dark:text-gray-400`}
       >
-        <header>
-          <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) py-5 lg:py-8 relative flex justify-between items-center">
-            <Link
-              href="/simpsons"
-              className="py-2 text-lg font-medium text-gray-600 hover:text-blue-500 dark:text-gray-400"
-            >
-              Simpsons
-            </Link>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Переглянуто {seenCount} з {allEpisodesCount} епізодів</p>
-          </div>
-        </header>
+        <Providers value={{
+          episodes: String(seenCount.episodes),
+          seen: String(seenCount.seen)
+        }}>
+        <Header />
         <main className="flex-1">
           <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) relative">
             {children}
           </div>
         </main>
+        </Providers>
         <footer>
           <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) py-5 lg:py-8 relative">
             {/* <p>Footer</p> */}
