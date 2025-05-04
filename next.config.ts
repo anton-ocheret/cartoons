@@ -2,7 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [new URL('https://simpsonsua.tv/**')],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'simpsons-images.s3.eu-north-1.amazonaws.com',
+        port: '',
+        pathname: '/optimized_images//**',
+        search: '',
+      },
+    ],
+    domains: ['simpsons-images.s3.eu-north-1.amazonaws.com'],
   },
 };
 

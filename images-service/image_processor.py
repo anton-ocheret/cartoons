@@ -95,9 +95,17 @@ def batch_process_images(input_dir, output_dir, size, crop_method='center', qual
     for i, img_path in enumerate(image_files, 1):
         # Create output filename with WebP extension
         rel_path = img_path.relative_to(input_path) if input_path in img_path.parents else img_path.name
-        mapped_rel_path = ''.join([char.replace("-", "x") for char in list(rel_path.stem)])
-        output_file = output_path / f"{mapped_rel_path}.webp"
-        
+        rel_path_with_delimeter_as_list = list(map(lambda char : 'x' if (char =='-') else char, list(rel_path.stem)))
+        file_name = ''
+        if ('x' in rel_path_with_delimeter_as_list):
+            name_as_string = ''.join(rel_path_with_delimeter_as_list)
+            splitted_name = name_as_string.split('x')
+            season, episode = splitted_name
+            file_name = season.lstrip('0') + 'x' + episode.lstrip('0')
+        else:
+            file_name = rel_path.stem
+
+        output_file = output_path / f"{file_name}.webp"
         print(f"Processing {i}/{len(image_files)}: {img_path.name} -> {output_file.name}")
         
         success, original_size, new_size = process_image(

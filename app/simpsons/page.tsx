@@ -13,7 +13,7 @@ export default async function Page() {
         return (
           <div className='flex flex-col justify-center' key={season_id}>
             <Link  href={`/simpsons/${season_id}`} key={season_id}>
-              <Image src={poster} alt={`Постер Сезону ${season_id}`} width={256} height={269} className='rounded-lg mb-3 w-full'/>
+              <Image src={`https://simpsons-images.s3.eu-north-1.amazonaws.com/optimized_images/${season_id}.webp`} alt={`Постер Сезону ${season_id}`} width={380} height={400} className='rounded-lg mb-3 w-full'/>
             </Link>
             <div className={clsx('flex flex-col md:flex-row items-center justify-between', {
               'text-green-500': seen_episodes === total_episodes,

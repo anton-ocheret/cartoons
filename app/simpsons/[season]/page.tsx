@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
           return (
             <div className='flex flex-col justify-center' key={number}>
               <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
-                <Image src={poster} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
+                <Image src={`https://simpsons-images.s3.eu-north-1.amazonaws.com/optimized_images/${season_id}x${number}.webp`} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
               </Link>
               <div className='flex flex-row items-center justify-between'>
                 <h6 className='text-lg'>{number} Епізод</h6>
