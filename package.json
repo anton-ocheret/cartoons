@@ -7,7 +7,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "img:download": "cd images-service && python3 image_downloader.py",
+    "img:optimize": "cd images-service && python3 image_processor.py downloaded_images optimized_images"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.2.3",
