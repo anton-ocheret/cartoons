@@ -9,7 +9,7 @@ export default async function Page() {
 
   return (
     <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-      {seasonPageData.map(async ({ poster, season_id, seen_episodes, total_episodes }) => {
+      {seasonPageData.map(async ({ season_id, seen_episodes, total_episodes }) => {
         return (
           <div className='flex flex-col justify-center' key={season_id}>
             <Link  href={`/simpsons/${season_id}`} key={season_id}>

@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ season: strin
       </div>
       
       <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-        {episodes.map(({ poster, number, season_id, seen }) => {
+        {episodes.map(({ number, season_id, seen }) => {
           return (
             <div className='flex flex-col justify-center' key={number}>
               <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
