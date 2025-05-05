@@ -1,27 +1,14 @@
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import { Suspense } from 'react';
 import clsx from 'clsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getEpisodes, getSeasonsCount } from '@/app/queries';
-import { ToggleSeenButton } from '@/app/components/ToogleSeenButton';
+import { getSeasonsCount } from '@/app/queries';
+import EpisodesList from '@/app/components/EpisodesList';
+import ItemsListSkeleton from '@/app/components/ItemsListSkeleton';
 
 export default async function Page({ params }: { params: Promise<{ season: string }> }) {
   const { season: seasonId } = await params;
-  const episodes = await getEpisodes(Number(seasonId));
-
-  if (!episodes.length) {
-    return (
-      <>
-        <div className='flex flex-col items-center justify-center h-screen'>
-          <p className='text-2xl font-bold mb-4'>{seasonId} Сезон не знайдено</p>
-          <Link href='/simpsons'>
-            <Button>На головну</Button>
-          </Link>
-        </div>
-      </>
-    );
-  }
 
   const seasonsCount = await getSeasonsCount();
   const hasNextSeason = Number(seasonId) < seasonsCount;
@@ -40,27 +27,10 @@ export default async function Page({ params }: { params: Promise<{ season: strin
           <Button size="icon" disabled={!hasNextSeason}><ChevronRight/></Button>
         </Link>
       </div>
-      
-      <div className='grid gap-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-10'>
-        {episodes.map(({ number, season_id, seen }) => {
-          return (
-            <div className='flex flex-col justify-center' key={number}>
-              <Link  href={`/simpsons/${Number(season_id)}/episode/${Number(number)}`} key={number}>
-                <Image src={`https://simpsons-images.s3.eu-north-1.amazonaws.com/optimized_images/${season_id}x${number}.webp`} alt="" width={256} height={269} className='rounded-lg mb-3 w-full'/>
-              </Link>
-              <div className='flex flex-row items-center justify-between'>
-                <h6 className='text-lg'>{number} Епізод</h6>
-                <ToggleSeenButton
-                  noLabel
-                  seen={seen}
-                  seasonId={seasonId}
-                  episodeNumber={number}
-                />
-              </div>
-            </div>
-          )
-        })}
-      </div>
+
+      <Suspense fallback={<ItemsListSkeleton count={20} />}>
+        <EpisodesList seasonId={Number(seasonId)} />
+      </Suspense>
     </>
   )
 }
