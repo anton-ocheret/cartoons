@@ -20,8 +20,16 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
     const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
     const params = useParams();
+    const hasPlayedRef = useRef(false);
 
-    useImperativeHandle(ref, () => videoRef.current!); // Expose internal ref to forwardedRef. (Allows for callback & regular useRef)
+    useImperativeHandle(ref, () => ({
+      ...videoRef.current!,
+      seekToTime: () => {
+        if (videoRef.current) {
+          videoRef.current.currentTime = 80; // 1:20 in seconds
+        }
+      }
+    }));
 
     useEffect(() => {
       if (!videoRef.current) return;
@@ -34,6 +42,16 @@ const HLSPlayer = forwardRef<HTMLVideoElement, Props>(
 
         hls.loadSource(videoUrl);
         hls.attachMedia(videoRef.current);
+        
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          videoRef.current?.addEventListener('play', () => {
+            console.dir(videoRef.current);
+            if (videoRef.current && !hasPlayedRef.current) {
+              videoRef.current.currentTime = 50;
+              hasPlayedRef.current = true;
+            }
+          });
+        });
 
         hls.on((Hls.Events as any).MEDIA_ENDED, () => {
           if (hasNextEpisode) {
