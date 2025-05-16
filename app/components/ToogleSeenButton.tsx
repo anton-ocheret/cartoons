@@ -21,19 +21,22 @@ export function ToggleSeenButton(props: {
   } = props;
   const [seen, setSeen] = useState(props.seen);
   const { fetchSeenInformation } = useContext(SeenContext);
+  const [loading, setLoading] = useState(false);
 
   const Icon = seen ? <Eye /> : <EyeOff />;
   const text = seen ? 'Відзначити як не переглянуто' : 'Відзначити як переглянуто';
 
   const disabled = !props.seasonId || !props.episodeNumber || props.disabled;
   const toggleSeen = async () => {
+    setLoading(() => true);
     const formData = new FormData();
     formData.append('seasonId', String(props.seasonId));
     formData.append('episodeNumber', String(props.episodeNumber));
 
     await togleSeenAction(formData);
     setSeen((prevSeen) => !prevSeen);
-    fetchSeenInformation();
+    await fetchSeenInformation();
+    setLoading(() => false);
   }
   return (
     <div className='flex flex-row items-center'>
@@ -44,8 +47,9 @@ export function ToggleSeenButton(props: {
           'bg-green-500 hover:bg-green-600': seen,
           'opacity-80!': disabled,
         })}
-        disabled={disabled}
+        disabled={disabled || loading}
         onClick={toggleSeen}
+        loading={loading}
       >
         {Icon}
       </Button>
