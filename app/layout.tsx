@@ -46,18 +46,13 @@ export default async function RootLayout({
           episodes: String(seenCount.episodes),
           seen: String(seenCount.seen)
         }}>
-        <Header />
-        <main className="flex-1">
-          <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) relative">
-            {children}
-          </div>
-        </main>
+          <Header />
+          <main className="flex-1">
+            <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) relative">
+              {children}
+            </div>
+          </main>
         </Providers>
-        <footer>
-          <div className="container px-8 mx-auto xl:px-5  max-w-(--breakpoint-lg) py-5 lg:py-8 relative">
-            {/* <p>Footer</p> */}
-          </div>
-        </footer>
       </body>
     </html>
   );
