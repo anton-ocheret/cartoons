@@ -51,7 +51,9 @@ export default async function Page({ params }: { params: Promise<{ season: strin
           <Link href={`/simpsons/${prevSeason}/episode/1`} className={clsx({ 'pointer-events-none': !hasPrevSeason })}>
             <Button disabled={!hasPrevSeason} size="icon"><ChevronLeft/></Button>
           </Link>
-          <p>{seasonId} Сезон</p>
+          <Link href={`/simpsons/${seasonId}`}>
+            <p>{seasonId} Сезон</p>
+          </Link>
           <Link href={`/simpsons/${nextSeason}/episode/1`} className={clsx({ 'pointer-events-none': !hasNextSeason })}>
             <Button disabled={!hasNextSeason} size="icon"><ChevronRight/></Button>
           </Link>
